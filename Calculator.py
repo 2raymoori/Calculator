@@ -8,14 +8,35 @@ def captureText(input):
     inputText.insert(END, input)
 
 
+def clearInput():
+    inputText.delete(0, END)
+
+
 def compute():
     calculator = CalculatorLogic()
-    answer = calculator.postFixEval(calculator.infixToPostFix(inputText.get()))
-    print(answer)
+    curExpression = inputText.get()
+    answer = calculator.postFixEval(calculator.infixToPostFix(curExpression))
+    # histBoxVal = (curExpression, "\t\t", answer)
+    historyBox.insert(END, f"{curExpression}     =     {answer}")
     inputText.delete(0, END)
 
 
 root = tkinter.Tk()
+root.title("CALCULATOR")
+root.option_add('*Font', 'Times 19')
+root.geometry("500x500")
+
+
+row6 = tkinter.Frame(root)
+historyBox = tkinter.Listbox(row6, height=5, bg="white",
+                             activestyle='dotbox',
+                             fg="black")
+scrollbar = tkinter.Scrollbar(row6)
+scrollbar.pack(side=RIGHT, fill=BOTH)
+scrollbar.config(command=historyBox.yview)
+historyBox.config(yscrollcommand=scrollbar.set)
+historyBox.pack(fill="both", expand=True, side="left")
+row6.pack(fill="both", expand=True)
 
 row5 = tkinter.Frame(root)
 inputText = tkinter.Entry(row5)
@@ -23,7 +44,7 @@ inputText.pack(fill="both", expand=True, side="left")
 row5.pack(fill="both", expand=True)
 
 row4 = tkinter.Frame(root)
-btnCancel = tkinter.Button(row4, text="C", command=lambda: captureText())
+btnCancel = tkinter.Button(row4, text="C", command=clearInput)
 btnCancel.pack(fill="both", expand=True, side="left")
 btnBOpen = tkinter.Button(row4, text=" (", command=lambda: captureText("("))
 btnBOpen.pack(fill="both", expand=True, side="left")
